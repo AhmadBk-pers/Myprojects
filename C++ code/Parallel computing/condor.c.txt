@@ -1,0 +1,87 @@
+#include <stdio.h>
+#include <omp.h>
+#include <math.h>
+
+#define N 500
+#define ITERATIONS 10000
+#define TOL 0.01
+
+typedef double MATRIX_V[N+1][N+1];
+
+int main (int argc , char* argv [])
+{
+
+int i,j;
+double diffnorm = 0.0;
+int ncore = omp_get_num_procs();
+int nthreads, iter = 0;
+MATRIX_V V,V_tmp;
+double *p_local, *p_local_tmp, *swap;
+
+for(i=1; i<N; i++)
+	for(j=1; j<N ; j++){
+		V[i][j] = 0.0;
+		V_tmp[i][j] = 0.0;
+}
+ 
+	for (i = 201; i <= 300; i++) V[1][i] = 80; 
+	for (i = 1; i <= 200; i++) V[1][i]   = 20;
+	for (i = 301; i <= 500; i++) V[1][i] = 20;
+	for (i = 1; i <= 500; i++) V[N][i]   = 20;
+	for (i = 1; i <= 500; i++) V[i][1]   = 20;
+	for (i = 1; i <= 500; i++) V[i][N]   = 20;
+
+
+    // copy whole array once
+	for (i = 1 ; i <= N; i++)
+   		for (j = 1 ; j <= N ; j++)
+			 V_tmp[i][j]= V[i][j];
+
+
+	p_local=&V[0][0];
+	p_local_tmp=&V_tmp[0][0];
+
+	// get starting time
+        double start_time = omp_get_wtime();
+
+#pragma omp parallel 
+{	
+	
+nthreads = omp_get_num_threads();
+		
+// numerically solve Laplace's equation
+do{
+	diffnorm = 0.0; 
+#pragma omp parallel for private(i,j) shared(V, V_tmp,p_local_tmp,p_local)
+for (i = 2; i < N; i++){
+	for (j = 2; j < N; j++){
+
+	*(p_local_tmp+i*(N+1)+j) = 0.25 * ( *(p_local+((i-1)*(N+1))+j) + *(p_local+((i+1)*(N+1))+j) + *(p_local+(i*(N+1))+j-1) + *(p_local+(i*(N+1))+j+1));
+					
+	diffnorm += ( *(p_local_tmp+i*(N+1)+j) - *(p_local+i*(N+1)+j) ) * ( *(p_local_tmp+i*(N+1)+j) - *(p_local+i*(N+1)+j) );				
+				}
+			}
+swap = p_local_tmp; 
+p_local_tmp = p_local;
+p_local = swap;
+
+diffnorm = sqrt(diffnorm);
+iter = iter +1 ;
+	}while( diffnorm > TOL && iter < ITERATIONS );
+	
+	}
+
+double end_time = omp_get_wtime();
+double total_time = end_time - start_time ;
+
+printf("total time to execute the program take: %f [sec]\n",total_time);
+printf("num of grid is: %d , num of cores is: %d ,nums of treads is: %d\n;",N,ncore,nthreads);
+
+/*FILE *fptr = fopen("MatrixOut.txt","w");
+	for (i = 1 ; i <= N; i++){
+		//fprintf(fptr,"-------start vector num: %d\n",i);
+   		for (j = 1 ; j <= N ; j++)
+			fprintf(fptr,"%f\n",V_tmp[i][j]);}*/
+
+
+}

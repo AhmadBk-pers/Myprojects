@@ -1,0 +1,24 @@
+Dependencies for Project 'UART_RX_TX', Target 'stm32f4': (DO NOT MODIFY !)
+CompilerVersion: 5060750::V5.06 update 6 (build 750)::.\ARMCC
+F (.\main.c)(0x5EDEB8C6)(-c --cpu Cortex-M4.fp.sp -D__EVAL -g -O0 --apcs=interwork --split_sections-I.\RTE\_stm32f4-I"E:\Embedded course\Arm\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include"-I"E:\Embedded course\Arm\Packs\Keil\STM32F4xx_DFP\2.14.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include"-D__UVISION_VERSION="530" -D_RTE_ -DSTM32F401xE -D_RTE_-o .\objects\main.o --omf_browse .\objects\main.crf --depend .\objects\main.d)
+I (E:\Embedded course\Arm\Packs\Keil\STM32F4xx_DFP\2.14.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include\stm32f4xx.h)(0x5C5BD672)
+I (E:\Embedded course\Arm\Packs\Keil\STM32F4xx_DFP\2.14.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include\stm32f401xe.h)(0x5C5BD672)
+I (E:\Embedded course\Arm\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include\core_cm4.h)(0x5E8F1772)
+I (E:\Embedded course\ARM\ARMCC\include\stdint.h)(0x5E5396AC)
+I (E:\Embedded course\Arm\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include\cmsis_version.h)(0x5E8F1772)
+I (E:\Embedded course\Arm\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include\cmsis_compiler.h)(0x5E834D12)
+I (E:\Embedded course\Arm\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include\cmsis_armcc.h)(0x5E8F1772)
+I (E:\Embedded course\Arm\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include\mpu_armv7.h)(0x5E8F1772)
+I (E:\Embedded course\Arm\Packs\Keil\STM32F4xx_DFP\2.14.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include\system_stm32f4xx.h)(0x5C5BD672)
+I (E:\Embedded course\ARM\ARMCC\include\stdio.h)(0x5E5396AC)
+F (RTE\Device\STM32F401RETx\startup_stm32f401xe.s)(0x5C5BD672)(--cpu Cortex-M4.fp.sp --pd "__EVAL SETA 1" -g --apcs=interwork -I.\RTE\_stm32f4-I"E:\Embedded course\Arm\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include"-I"E:\Embedded course\Arm\Packs\Keil\STM32F4xx_DFP\2.14.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include"--pd "__UVISION_VERSION SETA 530" --pd "_RTE_ SETA 1" --pd "STM32F401xE SETA 1" --pd "_RTE_ SETA 1"--list .\listings\startup_stm32f401xe.lst --xref -o .\objects\startup_stm32f401xe.o --depend .\objects\startup_stm32f401xe.d)
+F (RTE\Device\STM32F401RETx\system_stm32f4xx.c)(0x5C5BD672)(-c --cpu Cortex-M4.fp.sp -D__EVAL -g -O0 --apcs=interwork --split_sections-I.\RTE\_stm32f4-I"E:\Embedded course\Arm\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include"-I"E:\Embedded course\Arm\Packs\Keil\STM32F4xx_DFP\2.14.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include"-D__UVISION_VERSION="530" -D_RTE_ -DSTM32F401xE -D_RTE_-o .\objects\system_stm32f4xx.o --omf_browse .\objects\system_stm32f4xx.crf --depend .\objects\system_stm32f4xx.d)
+I (E:\Embedded course\Arm\Packs\Keil\STM32F4xx_DFP\2.14.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include\stm32f4xx.h)(0x5C5BD672)
+I (E:\Embedded course\Arm\Packs\Keil\STM32F4xx_DFP\2.14.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include\stm32f401xe.h)(0x5C5BD672)
+I (E:\Embedded course\Arm\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include\core_cm4.h)(0x5E8F1772)
+I (E:\Embedded course\ARM\ARMCC\include\stdint.h)(0x5E5396AC)
+I (E:\Embedded course\Arm\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include\cmsis_version.h)(0x5E8F1772)
+I (E:\Embedded course\Arm\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include\cmsis_compiler.h)(0x5E834D12)
+I (E:\Embedded course\Arm\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include\cmsis_armcc.h)(0x5E8F1772)
+I (E:\Embedded course\Arm\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include\mpu_armv7.h)(0x5E8F1772)
+I (E:\Embedded course\Arm\Packs\Keil\STM32F4xx_DFP\2.14.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include\system_stm32f4xx.h)(0x5C5BD672)

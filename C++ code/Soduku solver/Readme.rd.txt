@@ -1,0 +1,1 @@
+This program gives all the solutions for a soduku puzzle using back traction method 
