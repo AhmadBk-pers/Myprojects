@@ -1,0 +1,11 @@
+*
+!*.c
+!*.h
+!/**/
+!.gitignore
+!dummy.md
+!/*/makefile
+*/tests/
+*/lab/
+*/cr/
+*/temp_dir
