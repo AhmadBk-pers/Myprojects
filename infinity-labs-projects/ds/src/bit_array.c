@@ -39,7 +39,7 @@ void BitsArrToString(bitsarr_t bits_arr, char *buffer)
 
 bitsarr_t BitsArrSetOn(bitsarr_t bits_arr, size_t index)
 {
-	bitsarr_t mask = 1 << index;
+	bitsarr_t mask = (size_t)1 << index;
 	
 	assert(index < sizeof(bitsarr_t) * CHAR_BIT);
 		
@@ -51,7 +51,7 @@ bitsarr_t BitsArrSetOn(bitsarr_t bits_arr, size_t index)
 bitsarr_t BitsArrSetOff(bitsarr_t bits_arr, size_t index)
 {	
 	
-	bitsarr_t mask = 1 << index;
+	bitsarr_t mask = (size_t)1 << index;
 	
 	assert(index < sizeof(bitsarr_t) * CHAR_BIT);
 	
@@ -64,7 +64,7 @@ bitsarr_t BitsArrSetOff(bitsarr_t bits_arr, size_t index)
 bitsarr_t BitsArrSetBit(bitsarr_t bits_arr, size_t index, int value)
 {	
 	
-	bitsarr_t mask = 1 << index;
+	bitsarr_t mask = (size_t)1 << index;
 	
 	assert(index < sizeof(bitsarr_t) * CHAR_BIT);
 	
@@ -74,7 +74,7 @@ bitsarr_t BitsArrSetBit(bitsarr_t bits_arr, size_t index, int value)
 int BitsArrGetVal(bitsarr_t bits_arr, size_t index)
 {
 	
-	bitsarr_t mask = 1 << index;
+	bitsarr_t mask = (size_t)1 << index;
 	
 	assert(index < sizeof(bitsarr_t) * CHAR_BIT);
 	
@@ -84,7 +84,7 @@ int BitsArrGetVal(bitsarr_t bits_arr, size_t index)
 bitsarr_t BitsArrFlip(bitsarr_t bits_arr, size_t index)
 {
 	
-	bitsarr_t mask = 1 << index;
+	bitsarr_t mask = (size_t)1 << index;
 	
 	assert(index < sizeof(bitsarr_t) * CHAR_BIT);
 	

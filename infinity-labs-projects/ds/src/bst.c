@@ -26,10 +26,12 @@ struct bst_node
     bst_node_t *children[NUM_OF_CHILDREN];
 };
 
+/* The data structure has an end node which its left child 
+is the root node*/
 struct bst
 {
     bst_node_t end;
-    int (*is_before)(const void *, const void *, void *param);
+    find_func is_before;
     void *param;
 };
 
@@ -64,7 +66,8 @@ static void *NodeFree(bst_iter_t iter)
 	return data;
 }
 
-static void NodeConnect(bst_node_t *node, bst_node_t *parent, children_t position, bst_node_t *left_child, bst_node_t *right_child)
+static void NodeConnect(bst_node_t *node, bst_node_t *parent, 
+		children_t position, bst_node_t *left_child, bst_node_t *right_child)
 {
 	assert(node);
 	
@@ -111,7 +114,7 @@ bst_t *BSTCreate(find_func is_before, void *param)
 	tree->is_before = is_before;
 	tree->param = param;
 	
-	(tree->end).parent = NULL;
+	tree->end.parent = NULL;
 	tree->end.children[LEFT] = NULL;
 	tree->end.children[RIGHT] = NULL;
 	tree->end.data = NULL;
@@ -212,7 +215,8 @@ void *BSTRemove(bst_iter_t iter)
 		iter = NULL;
 		return data;
 	}
-	else if ((iter->children[LEFT] && !(iter->children[RIGHT])) || (!(iter->children[LEFT]) && iter->children[RIGHT]))
+	else if ((iter->children[LEFT] && !(iter->children[RIGHT])) 
+						|| (!(iter->children[LEFT]) && iter->children[RIGHT]))
 	{
 		if (BSTIterIsEqual(iter->parent->children[RIGHT], iter))
 		{
@@ -341,15 +345,21 @@ bst_iter_t BSTFind(const bst_t *bst, void *data)
 	
 	assert(bst);
 	
-	for (iter = BSTBegin(bst); iter != BSTEnd(bst); iter = BSTNext(iter))
+	iter = GetTreeRoot(bst);
+	while (NULL != iter)
 	{
 		if (iter->data == data)
 		{
-			break;
+			return iter;
+		}
+		else
+		{
+			int direction = !(bst->is_before(data, iter->data, bst->param));
+			iter = iter->children[direction];
 		}
 	}
 	
-	return iter;
+	return BSTEnd(bst);
 }
 
 int BSTForEach(bst_iter_t from, bst_iter_t to,

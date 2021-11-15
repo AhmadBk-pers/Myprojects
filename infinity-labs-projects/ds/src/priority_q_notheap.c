@@ -1,7 +1,7 @@
 /*****************************************************************************
 * Author        Ahmad Bakri
 * Reviewer      ---
-* Description   Priority queue heap implimintation module
+* Description   Priority q module
 * Group         OL110
 * Company       ILRD Ramat Gan
 * ****************************************************************************/
@@ -9,12 +9,12 @@
 #include <assert.h> /* assert() */
 #include <stdlib.h> /* malloc() */
 
-#include "priority_q.h"		/*Priority q API*/
-#include "heap.h"
+#include "priority_q.h"
+#include "sorted_list.h"
 
 struct priority_q
 {
-    heap_t *heap;
+    sr_list_t *srlist;
 };
 
 pq_t *PQCreate(int (*prioritize)(const void *data1, const void *data2))
@@ -28,9 +28,9 @@ pq_t *PQCreate(int (*prioritize)(const void *data1, const void *data2))
 	
 	assert(prioritize);
 	
-	prior_q->heap = HeapCreate(prioritize);
+	prior_q->srlist = SortedLCreate(prioritize);
 	
-	if(!(prior_q->heap))
+	if(!(prior_q->srlist))
 	{
 		free(prior_q);
 		prior_q = NULL;
@@ -45,7 +45,7 @@ void PQDestroy(pq_t *prior_q)
 {
 	assert(prior_q);
 	
-	HeapDestroy(prior_q->heap);
+	SortedLDestroy(prior_q->srlist);
 	
 	free(prior_q);
 	prior_q = NULL;
@@ -55,49 +55,77 @@ int PQIsEmpty(const pq_t *prior_q)
 {
 	assert(prior_q);
 	
-	return HeapIsEmpty(prior_q->heap);
+	return SortedLIsEmpty(prior_q->srlist);
 }
 
 size_t PQSize(const pq_t *prior_q)
 {
 	assert(prior_q);
 	
-	return HeapSize(prior_q->heap);
+	return SortedLSize(prior_q->srlist);
 }
 
 int PQEnqueue(pq_t *prior_q, void *data)
 {
 	assert(prior_q);
 	
-	return HeapPush((prior_q->heap), data);
+	return SortedLIsIterEqual(SortedLEnd(prior_q->srlist), SortedLInsert((prior_q->srlist), data));
 }
 
 void *PQDequeue(pq_t *prior_q)
 {
 	assert(prior_q);
 	
-	return HeapPop(prior_q->heap);
+	return SortedLPopBack(prior_q->srlist);
 }
 
 void *PQPeek(const pq_t *prior_q)
 {
 	assert(prior_q);
 	
-	return HeapPeek(prior_q->heap);	
+	return SortedLGetData(SortedLPrev(SortedLEnd(prior_q->srlist)));	
 }
 
 void *PQErase(pq_t *prior_q, const void *data)
 {
+	sr_iter_t iter = {0};
+	
 	assert(prior_q);
-
-	return HeapRemove(prior_q->heap, data);
+	
+	iter = SortedLFind(SortedLBegin(prior_q->srlist), SortedLEnd(prior_q->srlist), data, prior_q->srlist);
+	
+	if(!SortedLIsIterEqual(SortedLEnd(prior_q->srlist), iter))
+	{
+		void *return_data = SortedLGetData(iter);
+		SortedLRemove(iter);
+		
+		return return_data;
+	}
+	else
+	{
+		return NULL;
+	}
 }
 
 void *PQEraseIf(pq_t *prior_q, const void *criteria, int (*is_match)(const void *data, const void *criteria))
 {
+	sr_iter_t iter = {0};
+	
 	assert(prior_q);
 	
-	return HeapRemoveIf(prior_q->heap, criteria, is_match);
+	iter = SortedLFindIf(SortedLBegin(prior_q->srlist), SortedLEnd(prior_q->srlist), criteria, is_match);
+	
+	if(!SortedLIsIterEqual(SortedLEnd(prior_q->srlist), iter))
+	{
+		void *return_data = SortedLGetData(iter);
+		SortedLRemove(iter);
+		
+		return return_data;
+	}
+	else
+	{
+		return NULL;
+	}
 }
 
 void PQClear(pq_t *prior_q)

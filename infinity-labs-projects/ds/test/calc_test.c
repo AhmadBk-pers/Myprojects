@@ -1,3 +1,11 @@
+/*****************************************************************************
+* Author        Ahmad Bakri
+* Reviewer      RON
+* Description    combined with Finite State Machine tests.
+                Operators: +, -, *, /, ^.
+* Group         OL110
+* Company       ILRD Ramat Gan
+* ****************************************************************************/
 #include <stdio.h>
 #include <math.h>
 

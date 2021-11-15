@@ -1,6 +1,6 @@
 /*****************************************************************************
 * Author        Ahmad Bakri
-* Reviewer      ---
+* Reviewer      RON
 * Description    combined with Finite State Machine.
                 Operators: +, -, *, /, ^.
 * Group         OL110
@@ -15,7 +15,7 @@
 #include "calc.h"       /* API of this file */
 #include "stack.h"      /* for stack_t and functions of stack */
 
-#define STACK_SIZE 20
+const int STACK_SIZE  = 20;
 
 enum {WAITING_NUMBER, WAITING_OPERATOR, SYN_ERR};
 enum for_precedence_teable {LEFT_BRACKET = -1, INVALID_CHAR = 0};
@@ -74,7 +74,7 @@ calc_t *CalcCreate(void)
     {
         free(calc);
         calc = NULL;
-        free(numbers);
+        StackDestroy(numbers);
         numbers = NULL;
 
         return NULL;

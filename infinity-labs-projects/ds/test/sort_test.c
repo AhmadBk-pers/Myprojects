@@ -29,6 +29,12 @@
 
 #define ARR_SIZE 5000
 
+void TestSomeBinarySearchIterative(int arr[],size_t size, int num, int expect);
+void TestSomeBinarySearchRecursive(int arr[],size_t size, int num, int expect);
+void TestBinarySearchIterative();
+void TestBinarySearchRecursive();
+static void TestQuickSort(int *arr, size_t size);
+
 static int Compare(const void *num1, const void *num2)
 {
 	return *(int *)num1 - *(int *)num2;
@@ -50,8 +56,6 @@ static void CompareClock(clock_t time1, clock_t time2, clock_t timeqs2, clock_t 
 		printf("sqrt is equal to bubble\n");
 	}
 }
-
-
 
 static void PutRandArr(int *arr, size_t size)
 {
@@ -106,17 +110,19 @@ static int IsOrdered(int *arr, size_t size)
     return 1;
 }
 
-/*static void PrintIntArr(int *arr, size_t size)*/
-/*{*/
-/*    size_t i = 0;*/
+static void PrintIntArr(int *arr, size_t size)
+{
+    size_t i = 0;
 
-/*    assert(arr);*/
+    assert(arr);
 
-/*    for (i = 0; i < size; i++)*/
-/*    {*/
-/*        printf("%d\n", arr[i]);*/
-/*    }*/
-/*}*/
+    for (i = 0; i < size; i++)
+    {
+        printf("%d\t", arr[i]);
+    }
+
+    printf("\n");
+}
 
 static void TestBubbleSort(int *arr, size_t size)
 {
@@ -459,15 +465,231 @@ static void TestRadixSort(int *arr, size_t size)
 	CompareClock(c_before, c_after, qsort_after, qsort_before);
 }
 
+static void TestMergeSort(int *arr, size_t size)
+{
+    clock_t c_before = {0};
+    clock_t c_after = {0};
+	clock_t qsort_before = {0}, qsort_after = {0};
+
+    printf(BLUE "\nTesting Merge Sort\n" RESET);
+
+    PutRandArr(arr, size);
+    printf("Random array before Merge Sort:\n");
+    /*PrintIntArr(arr, size);*/
+    c_before = clock();
+    if (MergeSort(arr, size))
+    {
+        PRINT_FAILED("Merge Sort");
+    }
+    c_after = clock();
+    
+    PRINT_TIMESPAN(c_after - c_before, "\n\nRandom array Merge Sort");
+    printf("Random array after Merge Sort:\n");
+    /*PrintIntArr(arr, size);*/
+    COMPARE_AND_ALERT(IsOrdered(arr, size), 1, "Random array Merge Sort");
+
+    PutRandArr(arr, size);
+	qsort_before = clock();
+	qsort(arr, size, sizeof(int), Compare);
+	qsort_after = clock();
+	
+	CompareClock(c_before, c_after, qsort_after, qsort_before);
+
+
+    PutOrderedArr(arr, size);
+    printf("Ordered array before Merge Sort:\n");
+    /*PrintIntArr(arr, size);*/
+    c_before = clock();
+    if (MergeSort(arr, size))
+    {
+        PRINT_FAILED("Merge Sort");
+    }
+    c_after = clock();
+    PRINT_TIMESPAN(c_after - c_before, "Ordered array Merge Sort");
+    printf("Ordered array after Merge Sort:\n");
+    /*PrintIntArr(arr, size);*/
+    COMPARE_AND_ALERT(IsOrdered(arr, size), 1, "Ordered array Merge Sort");
+
+    PutOrderedArr(arr, size);
+	qsort_before = clock();
+	qsort(arr, size, sizeof(int), Compare);
+	qsort_after = clock();
+	
+	CompareClock(c_before, c_after, qsort_after, qsort_before);
+
+
+    PutReverseOrderedArr(arr, size);
+    printf("Reverse Ordered array before Merge Sort:\n");
+    /*PrintIntArr(arr, size);*/
+    c_before = clock();
+    if (MergeSort(arr, size))
+    {
+        PRINT_FAILED("Merge Sort");
+    }
+    c_after = clock();
+    PRINT_TIMESPAN(c_after - c_before, "Reverse Ordered array Merge Sort");
+    printf("Reverse Ordered array after Merge Sort:\n");
+    /*PrintIntArr(arr, size);*/
+    COMPARE_AND_ALERT(IsOrdered(arr, size), 1, "Reverse Ordered array Merge Sort");
+
+    PutReverseOrderedArr(arr, size);
+	qsort_before = clock();
+	qsort(arr, size, sizeof(int), Compare);
+	qsort_after = clock();
+	
+	CompareClock(c_before, c_after, qsort_after, qsort_before);
+}
+
+static void TestQuickSort(int *arr, size_t size)
+{
+    clock_t c_before = {0};
+    clock_t c_after = {0};
+	clock_t qsort_before = {0}, qsort_after = {0};
+
+    PutRandArr(arr, size);
+    /*printf("Random array before Quick Sort:\n");
+    PrintIntArr(arr, size);*/
+    c_before = clock();
+    QuickSort(arr, size, sizeof(int), Compare);
+    c_after = clock();
+    PRINT_TIMESPAN(c_after - c_before, "\n\nRandom array Quick Sort");
+    /*printf("Random array after Quick Sort:\n");
+    PrintIntArr(arr, size);*/
+    COMPARE_AND_ALERT(IsOrdered(arr, size), 1, "Random array Quick Sort");
+
+    PutRandArr(arr, size);
+	qsort_before = clock();
+	qsort(arr, size, sizeof(int), Compare);
+	qsort_after = clock();
+	
+	CompareClock(c_before, c_after, qsort_after, qsort_before);
+
+
+    PutOrderedArr(arr, size);
+    /*printf("Ordered array before Quick Sort:\n");
+    PrintIntArr(arr, size);*/
+    c_before = clock();
+    QuickSort(arr, size, sizeof(int), Compare);
+    c_after = clock();
+    PRINT_TIMESPAN(c_after - c_before, "Ordered array Quick Sort");
+    /*printf("Ordered array after Quick Sort:\n");
+    PrintIntArr(arr, size);*/
+    COMPARE_AND_ALERT(IsOrdered(arr, size), 1, "Ordered array Quick Sort");
+
+    PutOrderedArr(arr, size);
+	qsort_before = clock();
+	qsort(arr, size, sizeof(int), Compare);
+	qsort_after = clock();
+	
+	CompareClock(c_before, c_after, qsort_after, qsort_before);
+
+
+
+    PutReverseOrderedArr(arr, size);
+    /*printf("Reverse Ordered array before Quick Sort:\n");
+    PrintIntArr(arr, size);*/
+    c_before = clock();
+    QuickSort(arr, size, sizeof(int), Compare);
+    c_after = clock();
+    PRINT_TIMESPAN(c_after - c_before, "Reverse Ordered array Quick Sort");
+    /*printf("Reverse Ordered array after Quick Sort:\n");
+    PrintIntArr(arr, size);*/
+    COMPARE_AND_ALERT(IsOrdered(arr, size), 1, "Reverse Ordered array Quick Sort");
+
+    PutReverseOrderedArr(arr, size);    
+    qsort_before = clock();
+	qsort(arr, size, sizeof(int), Compare);
+	qsort_after = clock();
+	
+	CompareClock(c_before, c_after, qsort_after, qsort_before);
+}
+
+static void InitBest(int arr[], size_t size)
+{
+	size_t i = 0;
+	
+	for (; i < size; i++)
+	{
+		arr[i] = i;
+	}
+}
+
+
+
+void TestBinarySearchRecursive()
+{
+	int arr[ARR_SIZE] = {0};
+	
+	printf("\nTest - Binary Search Recursive\n");
+	
+	InitBest(arr, ARR_SIZE);
+	
+	TestSomeBinarySearchRecursive(arr, ARR_SIZE, 0, 0);
+	TestSomeBinarySearchRecursive(arr, ARR_SIZE, 5, 5);
+	TestSomeBinarySearchRecursive(arr, ARR_SIZE, 200, 200);
+	TestSomeBinarySearchRecursive(arr, ARR_SIZE, 4999, 4999);
+	TestSomeBinarySearchRecursive(arr, ARR_SIZE, ARR_SIZE, -1);
+	TestSomeBinarySearchRecursive(arr, ARR_SIZE, -1, -1);
+}
+
+void TestBinarySearchIterative()
+{
+	int arr[ARR_SIZE] = {0};
+	
+	printf("\nTest - Binary Search Iterative\n");
+	
+	InitBest(arr, ARR_SIZE);
+	
+	TestSomeBinarySearchIterative(arr, ARR_SIZE, 0, 0);
+	TestSomeBinarySearchIterative(arr, ARR_SIZE, 5, 5);
+	TestSomeBinarySearchIterative(arr, ARR_SIZE, 200, 200);
+	TestSomeBinarySearchIterative(arr, ARR_SIZE, 4999, 4999);
+	TestSomeBinarySearchIterative(arr, ARR_SIZE, ARR_SIZE, -1);
+	TestSomeBinarySearchIterative(arr, ARR_SIZE, -1, -1);
+}
+
+void PrintResultsInt (int res, int expect)
+{
+	(res == expect) ? printf(GREEN) : printf(RED);
+	
+	printf ("result: %d , expect: %d\n", res, expect);
+	
+	printf(RESET);
+}
+
+
+void TestSomeBinarySearchRecursive(int arr[],size_t size, int num, int expect)
+{
+	int index = BinarySearchRecursive(arr, ARR_SIZE, num);
+	int result = (-1 == index) ? -1 : arr[index];
+	PrintResultsInt(result, expect);
+}
+
+
+void TestSomeBinarySearchIterative(int arr[],size_t size, int num, int expect)
+{
+	int index = BinarySearchIterative(arr, ARR_SIZE, num);
+	int result = (-1 == index) ? -1 : arr[index];
+	PrintResultsInt(result, expect);
+}
+
 int main(void)
 {
     int arr[ARR_SIZE] = {0};
-
+    
     TestBubbleSort(arr, ARR_SIZE);
     TestSelectionSort(arr, ARR_SIZE);
     TestInsertionSort(arr, ARR_SIZE);
     TestCountingSort(arr, ARR_SIZE);
     TestRadixSort(arr, ARR_SIZE);
+    TestMergeSort(arr, ARR_SIZE);
+    TestQuickSort(arr, ARR_SIZE);
+
+    TestBinarySearchIterative();
+    TestBinarySearchRecursive();
+    
+
+   
 
     return 0;
 }

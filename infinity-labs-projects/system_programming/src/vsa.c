@@ -1,6 +1,6 @@
 /*****************************************************************************
 * Author        Ahmad Bakri
-* Reviewer      ---
+* Reviewer      Ron
 * Description   Variable Size Allocator module
 * Group         OL110
 * Company       ILRD Ramat Gan
@@ -10,8 +10,6 @@
 #include <limits.h> /* __WORDSIZE, CHAR_BIT */
 #include "vsa.h"
 
-
-#define FLAG 0xDEADBEAF
 
 struct vsa
 {
@@ -30,7 +28,8 @@ struct block
 typedef struct block block_t;
 
 
-static const size_t WORD_SIZE = __WORDSIZE / CHAR_BIT;
+static const size_t g_WORD_SIZE = __WORDSIZE / CHAR_BIT;
+static const int FLAG  = 0xDEADBEAF;
 
 
 static size_t GetFreeBlockOffset(vsa_t *vsa, size_t bytes);
@@ -43,7 +42,7 @@ static long Max(long a, long b);
 static size_t GetTotalCells(vsa_t *vsa);
 
 int BlockIsFree(block_t *block);
-void BlockSetIsFree(block_t *block);
+void BlockSetFree(block_t *block);
 
 
 vsa_t *VSAInit(void *pool_memory, size_t pool_size)
@@ -52,9 +51,9 @@ vsa_t *VSAInit(void *pool_memory, size_t pool_size)
 	pool_size = AllignDownToWord(pool_size);
 	
 	assert(pool_memory != NULL);
-	assert(pool_size >= WORD_SIZE);
+	assert(pool_size >= g_WORD_SIZE);
 	
-	if (pool_size >= WORD_SIZE + sizeof(block_t))
+	if (pool_size >= g_WORD_SIZE + sizeof(block_t))
 	{
 		block_t *block = NULL;
 		
@@ -62,7 +61,7 @@ vsa_t *VSAInit(void *pool_memory, size_t pool_size)
 		vsa->size = pool_size;
 		
 		block = (block_t *)(vsa + 1);
-		block->size = pool_size - WORD_SIZE;
+		block->size = pool_size - g_WORD_SIZE;
 	}
 	
 	return vsa;
@@ -89,7 +88,7 @@ void *VSAAlloc(vsa_t *vsa, size_t bytes)
 	/* case of taking just part of free block - update next free */
 	if ((long)bytes < block->size)
 	{
-		block_t *next_free = (block_t *)(vsa + offset + bytes / WORD_SIZE);
+		block_t *next_free = (block_t *)(vsa + offset + bytes / g_WORD_SIZE);
 		
 		next_free->size = block->size - bytes;
 	}
@@ -99,7 +98,7 @@ void *VSAAlloc(vsa_t *vsa, size_t bytes)
 	block->flag = FLAG;
 #endif /* NDEBUG */
 	
-	return (void*)(vsa + offset + sizeof(block_t) / WORD_SIZE);
+	return (void*)(vsa + offset + sizeof(block_t) / g_WORD_SIZE);
 }
 
 
@@ -111,7 +110,7 @@ static size_t GetFreeBlockOffset(vsa_t *vsa, size_t bytes)
 	assert (vsa != NULL);
 	
 	total_size = GetTotalCells(vsa);
-	offset += sizeof(vsa) / WORD_SIZE;
+	offset += sizeof(vsa) / g_WORD_SIZE;
 	
 	while (offset < total_size)
 	{
@@ -132,7 +131,7 @@ static size_t GetFreeBlockOffset(vsa_t *vsa, size_t bytes)
 			return offset;
 		}
 		
-		offset += Absolute(curr) / WORD_SIZE;
+		offset += Absolute(curr) / g_WORD_SIZE;
 	}
 	
 	return 0;
@@ -144,7 +143,7 @@ void VSAFree(void *block)
 	assert(!BlockIsFree(block));
 	assert( FLAG == ((block_t *)((size_t)block - sizeof(block_t)))->flag );
 	
-	BlockSetIsFree(block);
+	BlockSetFree(block);
 }
 
 
@@ -157,7 +156,7 @@ size_t VSALargestBlockAvailable(vsa_t *vsa)
 	assert(vsa != NULL);
 	
 	total_size = GetTotalCells(vsa);
-	offset = sizeof(vsa) / WORD_SIZE;
+	offset = sizeof(vsa) / g_WORD_SIZE;
 	
 	while (offset < total_size)
 	{
@@ -168,7 +167,7 @@ size_t VSALargestBlockAvailable(vsa_t *vsa)
 		curr = ((block_t *)(vsa + offset))->size;
 		max = Max(max, curr);
 		
-		offset += Absolute(curr) / WORD_SIZE;
+		offset += Absolute(curr) / g_WORD_SIZE;
 	}
 	
 	return (0 == max) ? 0 : max - sizeof(block_t);
@@ -181,7 +180,7 @@ static size_t LocalDefrag(vsa_t *vsa, size_t offset)
 	size_t total_size = GetTotalCells(vsa);
 	long free_space_to_add = 0;
 	
-	offset += ((block_t *)(vsa + offset))->size / WORD_SIZE;
+	offset += ((block_t *)(vsa + offset))->size / g_WORD_SIZE;
 	
 	while (offset < total_size)
 	{
@@ -193,7 +192,7 @@ static size_t LocalDefrag(vsa_t *vsa, size_t offset)
 		}
 		
 		free_space_to_add += curr;
-		offset += curr / WORD_SIZE;
+		offset += curr / g_WORD_SIZE;
 	}
 	
 	((block_t *)(vsa + origin_offset))->size += free_space_to_add;
@@ -206,13 +205,13 @@ static size_t LocalDefrag(vsa_t *vsa, size_t offset)
 
 static size_t AllignUpToWord(size_t size)
 {
-	return (size % WORD_SIZE) ? size + WORD_SIZE - (size % WORD_SIZE) : size;
+	return (size % g_WORD_SIZE) ? size + g_WORD_SIZE - (size % g_WORD_SIZE) : size;
 }
 
 
 static size_t AllignDownToWord(size_t size)
 {
-	return size - (size % WORD_SIZE);
+	return size - (size % g_WORD_SIZE);
 }
 
 
@@ -230,7 +229,7 @@ static long Max(long a, long b)
 
 static size_t GetTotalCells(vsa_t *vsa)
 {
-	return vsa->size / WORD_SIZE - 1;
+	return vsa->size / g_WORD_SIZE - 1;
 }
 
 
@@ -240,7 +239,7 @@ int BlockIsFree(block_t *block)
 }
 
 
-void BlockSetIsFree(block_t *block)
+void BlockSetFree(block_t *block)
 {
 	( (block_t *)((size_t)block - sizeof(block_t)) )->size *= (-1);
 }

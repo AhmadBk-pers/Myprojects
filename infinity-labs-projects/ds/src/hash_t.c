@@ -1,14 +1,14 @@
 /*****************************************************************************
 * Author        Ahmad Bakri
-* Reviewer      ------
+* Reviewer      Ron
 * Description   Hash Table module
 * Group         OL110
 * Company       ILRD Ramat Gan
 * ****************************************************************************/
 
 
-#include <assert.h>
-#include <stdlib.h>
+#include <assert.h>		/*assert*/
+#include <stdlib.h>		/*malloc*/
 
 #include "s_list.h"		/*	single list API_File*/
 #include "hash_t.h"    /* hash table API           */
@@ -87,7 +87,7 @@ int HTIsEmpty(const h_table_t *h_table)
 {
 	assert(h_table);
 	
-	return !HTSize(h_table);
+	return (HTSize(h_table) == 0);
 }
 
 int HTInsert(h_table_t *h_table, void *data)
@@ -104,6 +104,11 @@ int HTInsert(h_table_t *h_table, void *data)
 	if (hash_table[index] == NULL)
 	{
 		hash_table[index] = SLCreate();
+		if (NULL == hash_table[index])
+		{
+			return 1;
+		}
+
 		return HashInsert(hash_table[index], data);
 	}
 	else
@@ -130,6 +135,7 @@ void *HTRemove(h_table_t *h_table, const void *data)
 	}
 	
 	search_result = SLFind(hash_table[index], data, h_table->compare);
+	data = SLGetValue(search_result);
 
 	if (SLIterIsEqual(SLEnd(hash_table[index]), search_result))
 	{
@@ -191,8 +197,6 @@ int HTForEach(h_table_t *h_table, action_func_t action, void *param)
 	
 	return status;
 }
-
-
 
 static void HashTableDestroy(slist_t **hash_table, size_t size)
 {

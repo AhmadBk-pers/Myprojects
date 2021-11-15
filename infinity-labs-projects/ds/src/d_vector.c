@@ -91,10 +91,10 @@ int DVectorReserve(vector_t *vector, size_t new_capacity)
 		
 		vector->size = min_copy;
 		
-		return 1;
+		return 0;
 	}
 	
-	return 0;
+	return 1;
 }
 
 int DVectorShrinkToFit(vector_t *vector)

@@ -1,39 +1,39 @@
 /*****************************************************************************
 * Author        Ahmad Bakri
-* Reviewer      ---
-* Description   Recursion modules
+* Reviewer      Shahar
+* Description   Recursion module
 * Group         OL110
 * Company       ILRD Ramat Gan
 * ****************************************************************************/
-#include <assert.h>
-#include "recursion.h"
+#include <assert.h>					/*assert*/
+#include "recursion.h"				/*API of the project*/
 
 static void PutInPlace(stack_t *stack,int element);
 
-int FibRecursive(int element_index)
+int FibRecursive(int element)
 {
-	if (2 == element_index || 1 == element_index)
+	if (2 == element || 1 == element)
 	{
 		return 1;
 	}
 	else 
 	{
-		return (FibRecursive(element_index - 1) + FibRecursive(element_index - 2));
+		return (FibRecursive(element - 1) + FibRecursive(element - 2));
 	}
 }
 
-int FibIterative(int element_index)
+int FibIterative(int element)
 {
-	int k1, k2, k3, j;
-  	k1 = k2 = k3 = 1;
-  	for (j = 3; j <= element_index; j++)
+	int prev, current, next, i;
+  	prev = current = next = 1;
+  	for (i = 3; i <= element; i++)
   	{
-    	k3 = k1 + k2;
-      	k1 = k2;
-      	k2 = k3;
+    	next = prev + current;
+      	prev = current;
+      	current = next;
   	}
   	
-  	return k3;
+  	return next;
 }
 
 node_t* FlipList(node_t* node)
@@ -74,13 +74,12 @@ size_t StrLen(const char *str)
 
 int StrCmp (const char *str1, const char *str2)
 {
+	assert(str1);
+	assert(str2);
+
 	if (str1 == str2)
 	{
 		return 0;
-	}
-	else if (!str1 || !str2)
-	{
-		return 1;
 	}
 	
 	if (*str1 != *str2)
@@ -101,13 +100,13 @@ char *StrCpy(char *dest, const char *src)
 	assert(dest);
 	assert(src);
 	
+	*dest = *src;
+
 	if (!(*src))
 	{
-		*dest = *src;
 		return dest;
 	}
 	
-	*dest = *src;
 	StrCpy(++dest, ++src);
 	
 	return --dest;
@@ -124,10 +123,10 @@ char *StrCat(char *dest, const char *src)
 	}
 	else
 	{
-		StrCat(++dest, src);
+		StrCat(dest + 1, src);
 	}
 	
-	return --dest;	
+	return dest;	
 }
 
 char *StrStr(const char *haystack, const char *needle)
@@ -156,6 +155,8 @@ char *StrStr(const char *haystack, const char *needle)
 void StackSort(stack_t *stack)
 {
 	int temp = 0;
+
+	assert(stack);
 	
 	if (!StackIsEmpty(stack))
 	{
@@ -170,6 +171,8 @@ static void PutInPlace(stack_t *stack,int element)
 {
 	int temp = 0;
 	
+	assert(stack);
+
 	if (StackIsEmpty(stack) || element < StackPeek(stack))
 	{
 		StackPush(stack, element);
